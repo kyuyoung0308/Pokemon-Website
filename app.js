@@ -9,38 +9,82 @@ const router = express.Router();
 app.use('/', express.static('static'));
 
 
-
+app.use((req, res, next) => {
+    console.log(`${req.method} request for ${req.url}`);
+    next();
+})
 
 //install the router at /api/parts
-//app.use('/subjects', router)
+app.use('/api', router)
 
-app.get('/subjects', (req, res) => {
+//Question 1
+router.get('/subjects', (req, res) => {
+
     var obj = JSON.parse(fs.readFileSync('Lab3-timetable-data.json', 'utf8'));
-
     //var subjects=[];
     var className=[];
     var result =[];
     //console.log(obj);
 
     for (var i = 0; i<obj.length; i++){
-        //subjects[i]= obj[i].subject;
-        //className[i]=obj[i].className;
         result[i] = JSON.parse(`{"subject": "${obj[i].subject}","className": ""}`);
         result[i].className = obj[i].className;
         console.log (result[i]);
-        //console.log(className);
     }
 
     res.send(result);
 
 /*const key = "subject";
-const value= "86094";
+const value= "86094"; 
 const result = data.filter(d=>d[key]==value);
 
 console.log(result);*/
 });
 
+//Question 2
+/*app.get('/:subjectId', (req, res) => {
+    const subjectId = req.params.subject_id
+    var courseCodes = []
+    var obj = JSON.parse(fs.readFileSync('Lab3-timetable-data.json', 'utf8'));
 
+    for(var i = 0; i<obj.length; i++){
+        if(obj[i].subject === subjectId){
+            courseCodes[i].catalog_nbr = obj[i].catalog_nbr;
+        }
+        console.log (courseCodes)
+    }
+    
+res.send(courseCodes);
+})*/
+
+router.get('/:subject_id', (req, res) => {
+    const subjectId = req.params.subject_id
+    const courseCodes = []
+    var obj = JSON.parse(fs.readFileSync('Lab3-timetable-data.json', 'utf8'));
+
+    obj.forEach(function(codes) {
+
+        if (codes.subject.toString().toLowerCase() === subjectId.toString().toLowerCase()) {
+            courseCodes.push(codes.catalog_nbr.toString())
+        } 
+        console.log(courseCodes);
+    })
+    /*if(courseCodes.length === 0){
+        res.status(404).send(`The Subject ${subjectId} does not exist!`);
+    }else{
+    res.send(courseCodes);
+    }*/
+});
+
+
+    /*if (courseCodes.length !==0) {
+        res.send(courseCodes)
+    } else {
+        res.status(404).send(`The code ${id.toLowerCase()} is not valid`)
+    }*/ 
+
+
+//Question 3
 app.listen(port, () => {
     console.log(`Listening on port ${port}`)
 });
