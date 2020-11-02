@@ -69,11 +69,11 @@ router.get('/:subject_id', (req, res) => {
         } 
         console.log(courseCodes);
     })
-    /*if(courseCodes.length === 0){
+    if(courseCodes.length === 0){
         res.status(404).send(`The Subject ${subjectId} does not exist!`);
     }else{
     res.send(courseCodes);
-    }*/
+    }
 });
 
 
