@@ -1,0 +1,20 @@
+[
+    {
+        "scheduleName": "one",
+        "courses": [
+            {
+                "subject": "MATH",
+                "catalog_nbr": "2020"
+            }
+        ]
+    },
+    {
+        "scheduleName": "two",
+        "courses": [
+            {
+                "subject": "ENG",
+                "catalog_nbr": "200"
+            }
+        ]
+    }
+]

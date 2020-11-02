@@ -4,6 +4,8 @@ const { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } = require('constants');
 const app = express();
 const port = 3000;
 const router = express.Router();
+const bodyParser = require('body-parser');
+app.use(bodyParser.json());
 
 //setup serving front end code
 app.use('/', express.static('static'));
@@ -22,23 +24,18 @@ router.get('/subjects', (req, res) => {
 
     var obj = JSON.parse(fs.readFileSync('Lab3-timetable-data.json', 'utf8'));
     //var subjects=[];
-    var className=[];
-    var result =[];
+    var className = [];
+    var result = [];
     //console.log(obj);
 
-    for (var i = 0; i<obj.length; i++){
+    for (var i = 0; i < obj.length; i++) {
         result[i] = JSON.parse(`{"subject": "${obj[i].subject}","className": ""}`);
         result[i].className = obj[i].className;
-        console.log (result[i]);
+        console.log(result[i]);
     }
 
     res.send(result);
 
-/*const key = "subject";
-const value= "86094"; 
-const result = data.filter(d=>d[key]==value);
-
-console.log(result);*/
 });
 
 //Question 2
@@ -57,8 +54,8 @@ console.log(result);*/
 res.send(courseCodes);
 })*/
 
-router.get('/:subject_id', (req, res) => {
-    const subjectId = req.params.subject_id
+router.get('/:subjectId', (req, res) => {
+    const subjectId = req.params.subjectId
     const courseCodes = []
     var obj = JSON.parse(fs.readFileSync('Lab3-timetable-data.json', 'utf8'));
 
@@ -66,20 +63,20 @@ router.get('/:subject_id', (req, res) => {
         if (codes.subject.toString().toLowerCase() === subjectId.toString().toLowerCase()) {
             courseCodes.push(`{"catalog_nbr": "${codes.catalog_nbr}"}`);
             //courseCodes.push(codes.catalog_nbr.toString())
-        } 
+        }
         console.log(courseCodes);
     })
-    if(courseCodes.length === 0){
+    if (courseCodes.length === 0) {
         res.status(404).send(`The Subject ${subjectId} does not exist!`);
-    }else{
-    res.send(courseCodes);
+    } else {
+        res.send(courseCodes);
     }
 });
 
 //Question 3
 
 router.get('/:subjectId/:course/:component?', (req, res) => {
-    
+
     var obj = JSON.parse(fs.readFileSync('Lab3-timetable-data.json', 'utf8'));
 
     const array = []
@@ -87,29 +84,197 @@ router.get('/:subjectId/:course/:component?', (req, res) => {
     var course = req.params.course
     var component = req.params.component
 
-    obj.forEach((timetable)=> {
-        
-        var subject = timetable.subject.toString();
-        var courseCode = timetable.catalog_nbr.toString();
+    obj.forEach((timetable) => {
+        var subject = timetable.subject;
+        var courseCode = timetable.catalog_nbr;
+        var info = JSON.stringify(timetable.course_info);
 
-        if (subjectId==subject && course == courseCode && typeof component != "") {
-            //res.send(entry.course_info)
-            //array.push(timetable.course_info.toString())
+        if (subjectId === subject && course === courseCode && typeof component === "undefined") {
+            var result = JSON.stringify(timetable.course_info);
+            console.log(result);
+            res.send(result);
         }
+        else if (subjectId === subject && course === courseCode && typeof component !== "undefined") {
+            var comp = info.ssr_component;
 
-        else if (subjectId==subject && course == courseCode && component == "") {
-            array.push(JSON.stringify(timetable.course_info))
-            //res.send(JSON.stringify(timetable.course_info));
-
-        }         
-         
-        else {
-            res.status(404).send(`No courses were found with subject ${subjectId} and course ${course}`);
+            if (component === detail) {
+                var result2 = JSON.stringify(detail);
+                console.log(result2);
+            }
         }
+        console.log(info.length);
 
+    })
+})
+
+//Question 4
+app.put('/new/:schedule', (req, res) => {
+
+    const s = req.params.schedule;
+
+    var exist = false;
+
+    var sche = JSON.parse(fs.readFileSync('schedule.json', 'utf8'));
+
+    sche.forEach((element) => {
+        if (element.scheduleName === s) {
+            exist = true;
+        }
     });
-    console.log(array);
+
+    if (exist) {
+        res.status(403).send("The specified timetable already exists");
+    } else {
+        var newSche = JSON.parse(`{"scheduleName": "", "courses":[]}`);
+        newSche.scheduleName = s;
+        sche.push(newSche);
+        var jsonString = JSON.stringify(sche)
+
+        fs.writeFileSync('schedule.json', jsonString, err => {
+            if (err) {
+                console.log('Error writing file', err)
+            } else {
+                console.log('Successfully wrote file')
+            }
+        })
+    }
+    res.send(sche);
+
 });
+
+//Question 5 Save a list of subject code, course code pairs under a given schedule name. 
+//Return an error if the schedule name does not exist. Replace existing subject-code + course-code pairs 
+//with new values and create new pairs if it doesn’t exist.
+router.put('/newcourse/:schedule', (req, res) => {
+
+    const keyPairs = req.body;
+    const s = req.params.schedule;
+
+    var exist = false;
+
+    var sche = JSON.parse(fs.readFileSync('schedule.json', 'utf8'));
+
+    sche.forEach((element) => {
+        if (element.scheduleName === s) {
+            exist = true;
+        }
+    });
+
+    if (!exist) {
+        res.status(403).send("The specified timetable does not exist exist");
+    } else {
+
+        sche.forEach((element) => {
+            if (element.scheduleName === s) {
+                element.courses = keyPairs;
+            }
+        })
+
+        var jsonString = JSON.stringify(sche)
+
+        fs.writeFileSync('schedule.json', jsonString, err => {
+            if (err) {
+                console.log('Error writing file', err)
+            } else {
+                console.log('Successfully wrote file')
+            }
+        })
+    }
+
+    res.send(sche);
+
+});
+
+//Question 6 Get the list of subject code, course code pairs for a given schedule.
+app.get('/courselist/:schedule', (req, res) => {
+    console.log("HIO");
+    var schedule = req.params.schedule;
+    var sche = JSON.parse(fs.readFileSync('schedule.json', 'utf8'));
+    var err = true;
+
+    sche.forEach((s) => {
+        console.log("HELLO");
+        if (schedule === s.scheduleName) {
+            res.send(s.courses);
+            err = false;
+        }
+    });
+    if (err) {
+        res.status(403).send("The specified schedule does not exist");
+    }
+});
+
+//Question 7 Delete a schedule with a given name. Return an error if the given schedule doesn’t exist
+router.delete('/deleteschedule/:schedule', (req, res) => {
+    const s = req.params.schedule;
+    var exist = false;
+
+    var sche = JSON.parse(fs.readFileSync('schedule.json', 'utf8'));
+
+    sche.forEach((element) => {
+        if (element.scheduleName === s) {
+            exist = true;
+        }
+    });
+
+    if (!exist) {
+        res.status(403).send("The specified timetable does not exist exist");
+    } else {
+
+        for (var i = 0; i < sche.length; i++) {
+            if (schedule === s.scheduleName) {
+                sche.splice(i, 1);
+                res.send(sche);
+            }
+        }
+
+
+
+
+
+        var jsonString = JSON.stringify(sche)
+
+        fs.writeFileSync('schedule.json', jsonString, err => {
+            if (err) {
+                console.log('Error writing file', err)
+            } else {
+                console.log('Successfully wrote file')
+            }
+        })
+    }
+
+    res.send(sche);
+
+});
+
+//Question 8 Get a list of schedule names and the number of courses that are saved in each schedule.
+
+//Question 9 Delete all schedules.
+
+//const key = "subject";
+//const value = "86094";
+//var result = obj.filter(d => d[subjectId] == course);
+
+/*obj.forEach((timetable)=> {
+    
+    var subject = timetable.subject;
+    var courseCode = timetable.catalog_nbr;
+
+    if (subjectId==subject && course == courseCode) {
+        //res.send(entry.course_info)
+        //array.push(timetable.course_info.toString())
+        //array.push(JSON.parse(timetable.course_info))
+        //res.send(JSON.stringify(timetable.course_info));
+        console.log(array);
+    }       
+     
+    else {
+        res.status(404).send(`No courses were found with subject ${subjectId} and course ${course}`);
+    }
+
+});
+console.log(array);*/
+
 
 app.listen(port, () => {
     console.log(`Listening on port ${port}`)
