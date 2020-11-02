@@ -62,10 +62,10 @@ router.get('/:subject_id', (req, res) => {
     const courseCodes = []
     var obj = JSON.parse(fs.readFileSync('Lab3-timetable-data.json', 'utf8'));
 
-    obj.forEach(function(codes) {
-
+    obj.forEach((codes) => {
         if (codes.subject.toString().toLowerCase() === subjectId.toString().toLowerCase()) {
-            courseCodes.push(codes.catalog_nbr.toString())
+            courseCodes.push(`{"catalog_nbr": "${codes.catalog_nbr}"}`);
+            //courseCodes.push(codes.catalog_nbr.toString())
         } 
         console.log(courseCodes);
     })
@@ -76,15 +76,41 @@ router.get('/:subject_id', (req, res) => {
     }
 });
 
-
-    /*if (courseCodes.length !==0) {
-        res.send(courseCodes)
-    } else {
-        res.status(404).send(`The code ${id.toLowerCase()} is not valid`)
-    }*/ 
-
-
 //Question 3
+
+router.get('/:subjectId/:course/:component?', (req, res) => {
+    
+    var obj = JSON.parse(fs.readFileSync('Lab3-timetable-data.json', 'utf8'));
+
+    const array = []
+    var subjectId = req.params.subjectId
+    var course = req.params.course
+    var component = req.params.component
+
+    obj.forEach((timetable)=> {
+        
+        var subject = timetable.subject.toString();
+        var courseCode = timetable.catalog_nbr.toString();
+
+        if (subjectId==subject && course == courseCode && typeof component != "") {
+            //res.send(entry.course_info)
+            //array.push(timetable.course_info.toString())
+        }
+
+        else if (subjectId==subject && course == courseCode && component == "") {
+            array.push(JSON.stringify(timetable.course_info))
+            //res.send(JSON.stringify(timetable.course_info));
+
+        }         
+         
+        else {
+            res.status(404).send(`No courses were found with subject ${subjectId} and course ${course}`);
+        }
+
+    });
+    console.log(array);
+});
+
 app.listen(port, () => {
     console.log(`Listening on port ${port}`)
 });
