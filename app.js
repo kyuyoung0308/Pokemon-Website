@@ -39,20 +39,7 @@ router.get('/subjects', (req, res) => {
 });
 
 //Question 2
-/*app.get('/:subjectId', (req, res) => {
-    const subjectId = req.params.subject_id
-    var courseCodes = []
-    var obj = JSON.parse(fs.readFileSync('Lab3-timetable-data.json', 'utf8'));
 
-    for(var i = 0; i<obj.length; i++){
-        if(obj[i].subject === subjectId){
-            courseCodes[i].catalog_nbr = obj[i].catalog_nbr;
-        }
-        console.log (courseCodes)
-    }
-    
-res.send(courseCodes);
-})*/
 
 router.get('/:subjectId', (req, res) => {
     const subjectId = req.params.subjectId
@@ -220,18 +207,11 @@ router.delete('/deleteschedule/:schedule', (req, res) => {
     if (!exist) {
         res.status(403).send("The specified timetable does not exist exist");
     } else {
-
         for (var i = 0; i < sche.length; i++) {
-            if (schedule === s.scheduleName) {
+            if (s == sche[i].scheduleName) {
                 sche.splice(i, 1);
-                res.send(sche);
             }
         }
-
-
-
-
-
         var jsonString = JSON.stringify(sche)
 
         fs.writeFileSync('schedule.json', jsonString, err => {
@@ -242,13 +222,23 @@ router.delete('/deleteschedule/:schedule', (req, res) => {
             }
         })
     }
-
     res.send(sche);
 
 });
 
 //Question 8 Get a list of schedule names and the number of courses that are saved in each schedule.
+app.get('/allschedules/list', (req, res) => {
 
+    var sche = JSON.parse(fs.readFileSync('schedule.json', 'utf8'));
+    var lists =[];
+    sche.forEach((element) => {
+        var pair = JSON.parse(`{"scheduleName": "${element.scheduleName}", "numCourses": "${element.courses.length}"}`);
+        
+        lists.push(pair);
+    });
+    res.send(lists);
+
+});
 //Question 9 Delete all schedules.
 
 //const key = "subject";
