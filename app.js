@@ -20,13 +20,12 @@ app.use((req, res, next) => {
 app.use('/api', router)
 
 //Question 1
-router.get('/subjects', (req, res) => {
+router.get('/question1/subjects', (req, res) => {
 
     var obj = JSON.parse(fs.readFileSync('Lab3-timetable-data.json', 'utf8'));
-    //var subjects=[];
+
     var className = [];
     var result = [];
-    //console.log(obj);
 
     for (var i = 0; i < obj.length; i++) {
         result[i] = JSON.parse(`{"subject": "${obj[i].subject}","className": ""}`);
@@ -39,9 +38,7 @@ router.get('/subjects', (req, res) => {
 });
 
 //Question 2
-
-
-router.get('/:subjectId', (req, res) => {
+router.get('/question2/:subjectId', (req, res) => {
     const subjectId = req.params.subjectId
     const courseCodes = []
     var obj = JSON.parse(fs.readFileSync('Lab3-timetable-data.json', 'utf8'));
@@ -49,7 +46,6 @@ router.get('/:subjectId', (req, res) => {
     obj.forEach((codes) => {
         if (codes.subject.toString().toLowerCase() === subjectId.toString().toLowerCase()) {
             courseCodes.push(`{"catalog_nbr": "${codes.catalog_nbr}"}`);
-            //courseCodes.push(codes.catalog_nbr.toString())
         }
         console.log(courseCodes);
     })
@@ -62,40 +58,32 @@ router.get('/:subjectId', (req, res) => {
 
 //Question 3
 
-router.get('/:subjectId/:course/:component?', (req, res) => {
+router.get('/question3/:subjectId/:course/:component?', (req, res) => {
 
     var obj = JSON.parse(fs.readFileSync('Lab3-timetable-data.json', 'utf8'));
 
-    const array = []
-    var subjectId = req.params.subjectId
-    var course = req.params.course
-    var component = req.params.component
+    var array = [];
+    var subjectId = req.params.subjectId;
+    var course = req.params.course;
+    var component = req.params.component;
 
     obj.forEach((timetable) => {
         var subject = timetable.subject;
         var courseCode = timetable.catalog_nbr;
-        var info = JSON.stringify(timetable.course_info);
+        var info = timetable;
 
         if (subjectId === subject && course === courseCode && typeof component === "undefined") {
-            var result = JSON.stringify(timetable.course_info);
-            console.log(result);
-            res.send(result);
+            array.push(info);
         }
         else if (subjectId === subject && course === courseCode && typeof component !== "undefined") {
-            var comp = info.ssr_component;
-
-            if (component === detail) {
-                var result2 = JSON.stringify(detail);
-                console.log(result2);
-            }
+            array.push(info);
         }
-        console.log(info.length);
-
     })
+    res.send(array);
 })
 
 //Question 4
-app.put('/new/:schedule', (req, res) => {
+router.put('/question4/new/:schedule', (req, res) => {
 
     const s = req.params.schedule;
 
@@ -124,15 +112,16 @@ app.put('/new/:schedule', (req, res) => {
                 console.log('Successfully wrote file')
             }
         })
+        res.send(sche);
     }
-    res.send(sche);
+    
 
 });
 
 //Question 5 Save a list of subject code, course code pairs under a given schedule name. 
 //Return an error if the schedule name does not exist. Replace existing subject-code + course-code pairs 
 //with new values and create new pairs if it doesn’t exist.
-router.put('/newcourse/:schedule', (req, res) => {
+router.put('/question5/newcourse/:schedule', (req, res) => {
 
     const keyPairs = req.body;
     const s = req.params.schedule;
@@ -173,7 +162,7 @@ router.put('/newcourse/:schedule', (req, res) => {
 });
 
 //Question 6 Get the list of subject code, course code pairs for a given schedule.
-app.get('/courselist/:schedule', (req, res) => {
+router.get('/question6/courselist/:schedule', (req, res) => {
     console.log("HIO");
     var schedule = req.params.schedule;
     var sche = JSON.parse(fs.readFileSync('schedule.json', 'utf8'));
@@ -192,7 +181,7 @@ app.get('/courselist/:schedule', (req, res) => {
 });
 
 //Question 7 Delete a schedule with a given name. Return an error if the given schedule doesn’t exist
-router.delete('/deleteschedule/:schedule', (req, res) => {
+router.delete('/question7/deleteschedule/:schedule', (req, res) => {
     const s = req.params.schedule;
     var exist = false;
 
@@ -227,7 +216,7 @@ router.delete('/deleteschedule/:schedule', (req, res) => {
 });
 
 //Question 8 Get a list of schedule names and the number of courses that are saved in each schedule.
-app.get('/allschedules/list', (req, res) => {
+router.get('/question8/allschedules/list', (req, res) => {
 
     var sche = JSON.parse(fs.readFileSync('schedule.json', 'utf8'));
     var lists = [];
@@ -240,7 +229,7 @@ app.get('/allschedules/list', (req, res) => {
 
 });
 //Question 9 Delete all schedules.
-app.delete('/delete/all/schedules', (req, res) => {
+router.delete('/question9/delete/all/schedules', (req, res) => {
 
     var sche = JSON.parse(fs.readFileSync('schedule.json', 'utf8'));
     sche.splice(0, sche.length);
@@ -257,107 +246,7 @@ app.delete('/delete/all/schedules', (req, res) => {
 });
 
 
-
-
-
-
-
-//const key = "subject";
-//const value = "86094";
-//var result = obj.filter(d => d[subjectId] == course);
-
-/*obj.forEach((timetable)=> {
-    
-    var subject = timetable.subject;
-    var courseCode = timetable.catalog_nbr;
-
-    if (subjectId==subject && course == courseCode) {
-        //res.send(entry.course_info)
-        //array.push(timetable.course_info.toString())
-        //array.push(JSON.parse(timetable.course_info))
-        //res.send(JSON.stringify(timetable.course_info));
-        console.log(array);
-    }       
-     
-    else {
-        res.status(404).send(`No courses were found with subject ${subjectId} and course ${course}`);
-    }
-
-});
-console.log(array);*/
-
-
 app.listen(port, () => {
     console.log(`Listening on port ${port}`)
 });
-/*const parts = [
-    {id: 100, name: 'belt', color: 'brown', stock:0},
-    {id: 101, name: 'clip', color: 'red', stock:0},
-    {id: 102, name: 'hat', color: 'blue', stock:0}
-];
-
-
-
-//setup middleware to do logging
-app.use((req, res, next) => {//for all routes
-    console.log(`${req.method} request for ${req.url}`);
-    next(); //keep going
-});
-
-//parse data in body as JSON
-router.use(express.json());
-
-router.route('/')//all the routes to the base prefix
-    //get a list of parts
-    .get((req,res)=>{
-        res.send(parts);
-    });
-
-//get detail for parts
-router.get('/:part_id', (req,res) =>{
-    const id = req.params.part_id;
-    const part = parts.find(p => p.id === parseInt(id));
-    if (part){
-        res.send(part);
-    }else{
-        res.status(404).send(`part ${id} was not found`);
-    }
-});
-
-//create/replace part data for a given id
-router.put('/:id', (req, res)=>{
-    const newpart = req.body;
-    console.log("part: ", newpart);
-    //add new id field
-    newpart.id = parseInt(req.params.id);
-
-    //replace the part with the new one
-    const part = parts.findIndex(p => p.id === newpart.id);
-    if (part < 0){//not found
-        console.log('creating new part');
-        parts.push(req.body);
-    }else{
-        console.log('modifying part', req.params.id);
-        parts[part] = req.body;
-    }
-      res.send(newpart);
-});
-
-//update stock level
-router.post('/:id', (req, res)=>{
-    const newpart = req.body;
-    console.log("part: ", newpart);
-    //find the part
-    const part = parts.findIndex(p => p.id === parseInt(req.params.id));
-
-    if (part < 0){//not found
-        res.status(404).send(`part ${req.params.id} not found`);
-    }else{
-        console.log('changing stock for ', req.params.id);
-        parts[part].stock += parseInt(req.body.stock);// stock properet must exist
-        res.send(req.body);
-    }
-});
-
-*/
 
