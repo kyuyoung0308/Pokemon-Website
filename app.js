@@ -230,16 +230,37 @@ router.delete('/deleteschedule/:schedule', (req, res) => {
 app.get('/allschedules/list', (req, res) => {
 
     var sche = JSON.parse(fs.readFileSync('schedule.json', 'utf8'));
-    var lists =[];
+    var lists = [];
     sche.forEach((element) => {
         var pair = JSON.parse(`{"scheduleName": "${element.scheduleName}", "numCourses": "${element.courses.length}"}`);
-        
+
         lists.push(pair);
     });
     res.send(lists);
 
 });
 //Question 9 Delete all schedules.
+app.delete('/delete/all/schedules', (req, res) => {
+
+    var sche = JSON.parse(fs.readFileSync('schedule.json', 'utf8'));
+    sche.splice(0, sche.length);
+
+    var jsonString = JSON.stringify(sche)
+    fs.writeFileSync('schedule.json', jsonString, err => {
+        if (err) {
+            console.log('Error writing file', err)
+        } else {
+            console.log('Successfully wrote file')
+        }
+    })
+    res.send(sche);
+});
+
+
+
+
+
+
 
 //const key = "subject";
 //const value = "86094";
