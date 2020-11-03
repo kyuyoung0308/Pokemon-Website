@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title></title>
+<meta name="description" content="se3316 lab3">
+<meta name="author" content="Kyu Young Han">
+<link rel="stylesheet" href="style.css" type="text/css">
+</head>
+
+<body>
+<!-- Place your content here -->
+<div class = "title">
+
+<h1>SE 3316A Undergraduate Fall/Winter Academic Timetable 2020/2021</h1>
+</div>
+<div class = "search">
+
+<form>
+  <input type="text" placeholder="Search Subject..." name="Search Subject" id="subject" oninput = "searchingNumber()">
+  <input type="submit" name="Search Subject" value="Search Subject" onClick="searchNumber()">
+
+  <input type="text" placeholder="Search Course Code.." name="Search Course Code" id="courseCode" oninput = "searchingName()">
+  <input type="submit" name="Search Course Code" value="Search Course Code" onClick="searchName()">
+    
+  <input type="text" placeholder="Search Component.." name="Search Component" id="component" oninput = "searchingName()">
+  <input type="submit" name="Search Component" value="Search Component" onClick="searchName()">
+
+  
+</form>
+</div>
+<!-- Embedded JavaScript go here -->
+<script src="app.js"></script>
+</body>
+</html>
