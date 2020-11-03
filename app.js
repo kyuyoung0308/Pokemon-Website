@@ -163,18 +163,18 @@ router.put('/question5/newcourse/:schedule', (req, res) => {
 
 //Question 6 Get the list of subject code, course code pairs for a given schedule.
 router.get('/question6/courselist/:schedule', (req, res) => {
-    console.log("HIO");
+
     var schedule = req.params.schedule;
     var sche = JSON.parse(fs.readFileSync('schedule.json', 'utf8'));
     var err = true;
 
     sche.forEach((s) => {
-        console.log("HELLO");
         if (schedule === s.scheduleName) {
             res.send(s.courses);
             err = false;
         }
     });
+    
     if (err) {
         res.status(403).send("The specified schedule does not exist");
     }
@@ -221,7 +221,7 @@ router.get('/question8/allschedules/list', (req, res) => {
     var sche = JSON.parse(fs.readFileSync('schedule.json', 'utf8'));
     var lists = [];
     sche.forEach((element) => {
-        var pair = JSON.parse(`{"scheduleName": "${element.scheduleName}", "numCourses": "${element.courses.length}"}`);
+        var pair = JSON.parse(`{"scheduleName": "${element.scheduleName}", "numberOfCourses": "${element.courses.length}"}`);
 
         lists.push(pair);
     });

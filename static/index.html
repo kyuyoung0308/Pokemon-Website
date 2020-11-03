@@ -17,35 +17,45 @@
 <div class = "search">
 
 <form>
-  <input type="text" placeholder="Search Subject..." name="Search Subject" id="subject">
-  <input type="submit" id="subjectSearch" name="Search Subject" value="Search Subject"><br><br>
+  <p>Question 1: View All Available Subjects and Class Names</p>
+  <input type="button" name="List All Available Subject and Classes" value="List All Available Subject and Classes" onclick="viewAllSubjects()"><br><br>
 
-  <input type="text" placeholder="Search Subject..." name="Search Subject" id="subject2">
-  <input type="submit" id="subjectSearch2" name="Search Subject" value="Search Subject">
-  <input type="text" placeholder="Search Course Code.." name="Search Course Code" id="courseCode">
-  <input type="submit" name="Search Course Code" value="Search Course Code"><br><br>
-    
-  <input type="text" placeholder="Search Subject..." name="Search Subject" id="subject3">
-  <input type="submit" id="subjectSearch3" name="Search Subject" value="Search Subject">
-  <input type="text" placeholder="Search Course Code.." name="Search Course Code" id="courseCode">
-  <input type="submit" name="Search Course Code" value="Search Course Code">
-  <input type="text" placeholder="Search Component.." name="Search Component" id="component" oninput = "searchingName()">
-  <input type="submit" name="Search Component" value="Search Component" onClick="searchName()"><br><br>
 
+  <p>Question 2: Get List of Course Codes for Given Subject</p>
+  <input type="text" placeholder="Enter a Subject Name..." id = "q2Subject">
+  <button onclick = "viewCourseCodes()">Add</button><br><br>
+   
+  <p>Question 3: Search by Subject, Course and Component</p>
+  <input type="text" placeholder="Search Subject..." name="Search Subject" id="sub">
+  <input type="text" placeholder="Search Course Code.." name="Search Course Code" id="cc">
+  <input type="text" placeholder="Search Component.." name="Search Component" id="comp">
+  <button onclick = "search()">Search</button><br><br>
+
+  <p>Question 4: Add a Schedule</p>
   <input type="text" placeholder="Add a Schedule..." id="add" >
   <button onclick = "addSchedule()">Add</button><br><br>
 
-  <input type="text" placeholder="Enter a Schedule...">
-  <input type="text" placeholder="Enter Subject and Course code..."><br><br>
+  <p>Question 5: Add Subject and Course to a Schedule</p><br>
+  <input type="text" placeholder="Enter a Schedule..." id="q5Schedule">
+  <input type="text" placeholder="Enter Subject..." id = "q5Subject">
+  <input type="text" placeholder="Enter Course..." id = "q5Course">
+  <button onclick = "addCourse()">Add</button><br><br>
 
-  <input type="text" placeholder="Enter a Schedule Name..."><br><br>
+  <p>Question 6: View a Schedule</p>
+  <input type="text" placeholder="Enter a Schedule Name..." id = "view">
+  <button onclick = "viewSchedule()">View</button><br><br>
 
-  <input type="text" placeholder="Delete a Schedule..."><br><br>
+  <p>Question 7: Delete a Schedule</p>  
+  <input type="text" placeholder="Delete a Schedule..." id = "delete">
+  <button onclick = "deleteSchedule()">Remove</button><br><br>
 
-  <input type="button" name="View All" value="List All Schedules"><br><br>
+  <p>Question 8: View all Schedules</p>
+  <input type="button" name="View All" value="List All Schedules" onclick="viewAll()"><br><br>
 
-  <input type="button" name="Delete All" value="Delete All Schedules"><br><br>
+  <p>Question 9: Delete all Schedules</p>
+  <input type="button" name="Delete All" value="Delete All Schedules" onclick="deleteAll()"><br><br>
    
+  <ol id ="list"></ol>
 </form>
 </div>
 <!-- Embedded JavaScript go here -->

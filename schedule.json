@@ -1,1 +1,51 @@
-[{"scheduleName":"one","courses":[{"subject":"MATH","catalog_nbr":"2020"}]},{"scheduleName":"two","courses":[{"subject":"ENG","catalog_nbr":"200"}]},{"scheduleName":"three","courses":[{"subject":"MATH","catalog_nbr":"200"},{"subject":"GEO","catalog_nbr":"300"}]},{"scheduleName":"five","courses":[]},{"scheduleName":"six","courses":[]},{"scheduleName":"seven","courses":[]}]
+[
+    {
+        "scheduleName": "one",
+        "courses": [
+            {
+                "subject": "MATH",
+                "catalog_nbr": "2077"
+            }
+        ]
+    },
+    {
+        "scheduleName": "two",
+        "courses": [
+            {
+                "subject": "ENG",
+                "catalog_nbr": "200"
+            }
+        ]
+    },
+    {
+        "scheduleName": "three",
+        "courses": [
+            {
+                "subject": "MATH",
+                "catalog_nbr": "200"
+            },
+            {
+                "subject": "GEO",
+                "catalog_nbr": "300"
+            }
+        ]
+    },
+    {
+        "scheduleName": "five",
+        "courses": [
+            {
+                "subject": "GEO",
+                "catalog_nbr": "2000"
+            }
+        ]
+    },
+    {
+        "scheduleName": "six",
+        "courses": [
+            {
+                "subject": "MATH",
+                "catalog_nbr": "3000"
+            }
+        ]
+    }
+]
