@@ -17,19 +17,38 @@
 <div class = "search">
 
 <form>
-  <input type="text" placeholder="Search Subject..." name="Search Subject" id="subject" oninput = "searchingNumber()">
-  <input type="submit" name="Search Subject" value="Search Subject" onClick="searchNumber()">
+  <input type="text" placeholder="Search Subject..." name="Search Subject" id="subject">
+  <input type="submit" id="subjectSearch" name="Search Subject" value="Search Subject"><br><br>
 
-  <input type="text" placeholder="Search Course Code.." name="Search Course Code" id="courseCode" oninput = "searchingName()">
-  <input type="submit" name="Search Course Code" value="Search Course Code" onClick="searchName()">
+  <input type="text" placeholder="Search Subject..." name="Search Subject" id="subject2">
+  <input type="submit" id="subjectSearch2" name="Search Subject" value="Search Subject">
+  <input type="text" placeholder="Search Course Code.." name="Search Course Code" id="courseCode">
+  <input type="submit" name="Search Course Code" value="Search Course Code"><br><br>
     
+  <input type="text" placeholder="Search Subject..." name="Search Subject" id="subject3">
+  <input type="submit" id="subjectSearch3" name="Search Subject" value="Search Subject">
+  <input type="text" placeholder="Search Course Code.." name="Search Course Code" id="courseCode">
+  <input type="submit" name="Search Course Code" value="Search Course Code">
   <input type="text" placeholder="Search Component.." name="Search Component" id="component" oninput = "searchingName()">
-  <input type="submit" name="Search Component" value="Search Component" onClick="searchName()">
+  <input type="submit" name="Search Component" value="Search Component" onClick="searchName()"><br><br>
 
-  
+  <input type="text" placeholder="Add a Schedule..." id="add" >
+  <button onclick = "addSchedule()">Add</button><br><br>
+
+  <input type="text" placeholder="Enter a Schedule...">
+  <input type="text" placeholder="Enter Subject and Course code..."><br><br>
+
+  <input type="text" placeholder="Enter a Schedule Name..."><br><br>
+
+  <input type="text" placeholder="Delete a Schedule..."><br><br>
+
+  <input type="button" name="View All" value="List All Schedules"><br><br>
+
+  <input type="button" name="Delete All" value="Delete All Schedules"><br><br>
+   
 </form>
 </div>
 <!-- Embedded JavaScript go here -->
-<script src="app.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
